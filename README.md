@@ -62,7 +62,6 @@ To run the backend server locally:
 ```bash
    uvicorn main:app --reload
 ```
-
 Interactive API documentation will be available at http://localhost:8000/docs.
 
 ## Testing
@@ -77,8 +76,40 @@ The project includes test scripts to validate ingestion, chunking, and RAG pipel
 ### Running Tests
 To run the validation test scripts:
 1. Ensure your virtual environment is active:
-   ```bash
+```bash
    cd backend
    .venv\Scripts\activate
    python tests/file_name.py
 ```
+## Frontend Architecture
+The frontend is built with Next.js 16 using Tailwind CSS 4:
+- `app/` - Handles the application layouts and main page view.
+- `components/` - Reusable UI widgets (e.g., chat components, metadata comparisons, input fields).
+- `hooks/` - Custom React hooks for API interaction, managing chat sessions, and WebSocket event handling.
+- `lib/` - Client-side network service configurations and helper functions.
+
+
+## Frontend Setup
+To run the frontend application locally:
+1. Navigate to the frontend directory:
+```bash
+   cd frontend
+```
+2. Install dependencies:
+```bash
+   npm install
+```
+3. Configure environment variables:
+Create a file named .env.local in the frontend folder.
+Add the backend service endpoints:
+```bash
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   NEXT_PUBLIC_WS_URL=ws://localhost:8000
+```
+   Update NEXT_PUBLIC_API_URL to match your backend URL (default: http://localhost:8000/api).
+
+4. Run the development server:
+```bash
+   npm run dev
+```
+The application will be accessible at http://localhost:3000.
