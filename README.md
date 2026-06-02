@@ -29,19 +29,38 @@ The backend is built with FastAPI:
 - state.py -> Manages state storage and pub/sub events using Redis.
 - routes -> Directory for API route groups (e.g., status, chat, ingest).
 
+## Core RAG Pipeline & Services
+The backend implements the following processing services:
+- Ingestion Service (`services/ingestion.py`): Fetches transcripts and metadata (engagement metrics, duration, follows) for YouTube videos (using YouTube Data API v3/transcripts API) and Instagram Reels (using scrape options).
+- Chunker Service (`services/chunker.py`): Chunks text transcripts into overlapping blocks of specified size for fine-grained context retrieval.
+- Embedder Service (`services/embedder.py`): Generates vector embeddings for transcript chunks using the `BAAI/bge-small-en-v1.5` model.
+- Vector Store Service (`services/vector_store.py`): Sets up and manages collections in Qdrant Vector DB, indexing chunk vectors.
+- LLM Service (`services/llm.py`): Orchestrates conversational RAG workflows using LangGraph and Groq's `llama-3.3-70b-versatile` model.
+
 ## Backend Setup
 To run the backend server locally:
 1. Navigate to the backend directory:
+```bash
    cd backend
+```
 2. Create and activate virtual environment
+```bash
    python -m venv .venv
    .venv\Scripts\activate
+```
 3. Install dependencies
+```bash
    pip install -r requirements.txt
+```
 4. Configure environment variables:
+```bash
    Copy .env.example to .env
+```
    Fill in your API keys (YOUTUBE_API_KEY, OPENAI_API_KEY, GROQ_API_KEY)
+
 5. Run the server:
+```bash
    uvicorn main:app --reload
+```
 
 Interactive API documentation will be available at http://localhost:8000/docs.
