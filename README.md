@@ -64,3 +64,21 @@ To run the backend server locally:
 ```
 
 Interactive API documentation will be available at http://localhost:8000/docs.
+
+## Testing
+The project includes test scripts to validate ingestion, chunking, and RAG pipelines:
+- `tests/test_chunks.py` - Verifies text chunking and overlap parameters.
+- `tests/test_youtube.py` - Unit tests for YouTube's transcript and metadata retrieval.
+- `tests/test_instagram.py` - Unit tests for Instagram's transcript and metadata retrieval.
+- `tests/test_pipeline.py` - Validates the full ingestion pipeline.
+- `tests/test_rag.py` - Validates context retrieval and LLM prompt and response.
+- `tests/test_e2e.py` - Performs an end-to-end system test.
+
+### Running Tests
+To run the validation test scripts:
+1. Ensure your virtual environment is active:
+   ```bash
+   cd backend
+   .venv\Scripts\activate
+   python tests/file_name.py
+```
