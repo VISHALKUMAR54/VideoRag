@@ -20,3 +20,28 @@ To deliver a full stack rag application which has lower latency, cost effective 
 ## Documentation
 Refer the below listed document for in-depth understanding of the project working and the plan to accomplish this project:
 - VideoRAG_Project_Documentation.pdf
+
+## Backend Architecture
+The backend is built with FastAPI:
+- main.py -> Entrypoint for the API, handles server lifespan events, CORS configurations, and routers.
+- config.py -> Manages app configuration and environment variables.
+- models.py -> Defines Pydantic data schemas for ingestion requests/responses, chat prompts, and video metadata.
+- state.py -> Manages state storage and pub/sub events using Redis.
+- routes -> Directory for API route groups (e.g., status, chat, ingest).
+
+## Backend Setup
+To run the backend server locally:
+1. Navigate to the backend directory:
+   cd backend
+2. Create and activate virtual environment
+   python -m venv .venv
+   .venv\Scripts\activate
+3. Install dependencies
+   pip install -r requirements.txt
+4. Configure environment variables:
+   Copy .env.example to .env
+   Fill in your API keys (YOUTUBE_API_KEY, OPENAI_API_KEY, GROQ_API_KEY)
+5. Run the server:
+   uvicorn main:app --reload
+
+Interactive API documentation will be available at http://localhost:8000/docs.
