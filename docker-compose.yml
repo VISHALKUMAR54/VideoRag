@@ -1,0 +1,62 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: videorag_qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ./VideoRag/qdrant:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__ENABLE_TLS: "false"
+      QDRANT__TELEMETRY_DISABLED: "true"
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: videorag_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./VideoRag/redis:/data
+    environment:
+      - REDIS_ARGS=--save 60 1 --loglevel warning --appendonly yes --appendfsync everysec
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  backend:
+    build: ./backend
+    container_name: videorag_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - QDRANT_HOST=qdrant
+    depends_on:
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: videorag_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

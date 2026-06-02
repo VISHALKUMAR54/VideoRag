@@ -17,11 +17,11 @@ To deliver a full stack rag application which has lower latency, cost effective 
 - BGE-small (embeddings)
 - Groq (LLM)
 
-## Documentation
+## Documentation:
 Refer the below listed document for in-depth understanding of the project working and the plan to accomplish this project:
 - VideoRAG_Project_Documentation.pdf
 
-## Backend Architecture
+## Backend Architecture:
 The backend is built with FastAPI:
 - main.py -> Entrypoint for the API, handles server lifespan events, CORS configurations, and routers.
 - config.py -> Manages app configuration and environment variables.
@@ -29,7 +29,7 @@ The backend is built with FastAPI:
 - state.py -> Manages state storage and pub/sub events using Redis.
 - routes -> Directory for API route groups (e.g., status, chat, ingest).
 
-## Core RAG Pipeline & Services
+## Core RAG Pipeline & Services:
 The backend implements the following processing services:
 - Ingestion Service (`services/ingestion.py`): Fetches transcripts and metadata (engagement metrics, duration, follows) for YouTube videos (using YouTube Data API v3/transcripts API) and Instagram Reels (using scrape options).
 - Chunker Service (`services/chunker.py`): Chunks text transcripts into overlapping blocks of specified size for fine-grained context retrieval.
@@ -37,7 +37,7 @@ The backend implements the following processing services:
 - Vector Store Service (`services/vector_store.py`): Sets up and manages collections in Qdrant Vector DB, indexing chunk vectors.
 - LLM Service (`services/llm.py`): Orchestrates conversational RAG workflows using LangGraph and Groq's `llama-3.3-70b-versatile` model.
 
-## Backend Setup
+## Backend Setup:
 To run the backend server locally:
 1. Navigate to the backend directory:
 ```bash
@@ -64,7 +64,7 @@ To run the backend server locally:
 ```
 Interactive API documentation will be available at http://localhost:8000/docs.
 
-## Testing
+## Testing:
 The project includes test scripts to validate ingestion, chunking, and RAG pipelines:
 - `tests/test_chunks.py` - Verifies text chunking and overlap parameters.
 - `tests/test_youtube.py` - Unit tests for YouTube's transcript and metadata retrieval.
@@ -73,7 +73,7 @@ The project includes test scripts to validate ingestion, chunking, and RAG pipel
 - `tests/test_rag.py` - Validates context retrieval and LLM prompt and response.
 - `tests/test_e2e.py` - Performs an end-to-end system test.
 
-### Running Tests
+### Running Tests:
 To run the validation test scripts:
 1. Ensure your virtual environment is active:
 ```bash
@@ -81,7 +81,7 @@ To run the validation test scripts:
    .venv\Scripts\activate
    python tests/file_name.py
 ```
-## Frontend Architecture
+## Frontend Architecture:
 The frontend is built with Next.js 16 using Tailwind CSS 4:
 - `app/` - Handles the application layouts and main page view.
 - `components/` - Reusable UI widgets (e.g., chat components, metadata comparisons, input fields).
@@ -89,7 +89,7 @@ The frontend is built with Next.js 16 using Tailwind CSS 4:
 - `lib/` - Client-side network service configurations and helper functions.
 
 
-## Frontend Setup
+## Frontend Setup:
 To run the frontend application locally:
 1. Navigate to the frontend directory:
 ```bash
@@ -113,3 +113,23 @@ Add the backend service endpoints:
    npm run dev
 ```
 The application will be accessible at http://localhost:3000.
+
+## Running with Docker:
+The project supports containerization using Docker Compose, running four primary services:
+- qdrant (port 6333): Vector database for transcript searches.
+- redis (port 6379): Cache and event hub (pub/sub).
+- backend (port 8000): FastAPI application service.
+- frontend (port 3000): Next.js web interface client.
+
+### Getting Started with Docker:
+1. Configure credentials:
+   - Ensure `backend/.env` is set up with valid API keys (it is loaded by the backend container).
+2. Run Docker Compose command to build and launch all services in the background:
+   ```bash
+   docker compose up -d --build
+   ```
+
+## Access the services:
+- Frontend web application: http://localhost:3000
+- Backend API documentation: http://localhost:8000/docs
+- Qdrant UI dashboard: http://localhost:6333/dashboard
